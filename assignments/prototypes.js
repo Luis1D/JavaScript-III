@@ -24,7 +24,7 @@ GameObject.prototype.destroy = function() {
 // ********** CharacterStats ********** //
 
 function CharacterStats(charStats) {
-  GameObject.call(this, charStats); // Goes upstream to grab prexisting stats
+  GameObject.call(this, charStats); // Goes upstream
   this.healthPoints = charStats.healthPoints;
 }
 
@@ -38,7 +38,7 @@ CharacterStats.prototype.takeDamage = function() { // Creates a 'takeDamage' met
 // ********** Humanoid ********** //
 
 function Humanoid(humanoidStats) {
-  CharacterStats.call(this, humanoidStats); // Goes upstream to grab prexisting stats
+  CharacterStats.call(this, humanoidStats); // Goes upstream
   this.team = humanoidStats.team;
   this.weapons = humanoidStats.weapons;
   this.language = humanoidStats.language;
@@ -50,14 +50,60 @@ Humanoid.prototype.greet = function() { // Creates a 'greet' method
 }
 
 
-/*
-  * Inheritance chain: GameObject -> CharacterStats -> Humanoid
-  * Instances of Humanoid should have all of the same properties as CharacterStats and GameObject.
-  * Instances of CharacterStats should have all of the same properties as GameObject.
-*/
+// ********** Villan ********** //
 
-// Test you work by un-commenting these 3 objects and the list of console logs below:
+function Villain(villainStats) {
+  Humanoid.call(this,villainStats);
+  this.specialPower = villainStats.specialPower;
+  this.defence = villainStats.defence;
+}
+Villain.prototype = Object.create(Humanoid.prototype);
 
+// ********** Hero ********** //
+function Hero(heroStats) {
+  Humanoid.call(this,heroStats);
+  this.armor = heroStats.armor;
+}
+Hero.prototype = Object.create(Humanoid.prototype);
+Hero.prototype.healthBoost = function() {
+  return 'Health Boost: ' + this.healthPoints * 2;
+}
+
+
+  const theVillain = new Villain({
+    createdAt: new Date(),
+    dimensions: {
+      length: 20,
+      width: 10,
+      height: 11,
+    },
+    healthPoints: 5,
+    name: 'Luis',
+    team: 'The Underworld',
+    weapons: [
+      'A skateboard',
+    ],
+    language: 'Spanish',
+    specialPower: 'Lazer Beam Eyes',
+    defence: 'Runs away',
+  })
+
+  const theHero = new Hero({
+    createdAt: new Date(),
+    dimensions: {
+      length: -20,
+      width: -10,
+      height: -11,
+    },
+    healthPoints: 115,
+    name: 'Luis',
+    team: 'Wizard',
+    weapons: [
+      'Wizard Stuff',
+    ],
+    language: 'Wizardry',
+    armor: 'Wizard Armor',
+  })
 
   const mage = new Humanoid({
     createdAt: new Date(),
@@ -119,7 +165,8 @@ Humanoid.prototype.greet = function() { // Creates a 'greet' method
   console.log(archer.greet()); // Lilith offers a greeting in Elvish.
   console.log(mage.takeDamage()); // Bruce took damage.
   console.log(swordsman.destroy()); // Sir Mustachio was removed from the game.
-
+  console.log(theVillain.specialPower);
+  console.log(theHero.healthBoost());
 
   // Stretch task: 
   // * Create Villain and Hero constructor functions that inherit from the Humanoid constructor function.  
